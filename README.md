@@ -31,3 +31,19 @@ Epoch 9/10 | Train Loss: 0.0152 Acc: 0.9951 | Val Loss: 0.0389 Acc: 0.9862
 Epoch 10/10 | Train Loss: 0.0107 Acc: 0.9961 | Val Loss: 0.0270 Acc: 0.9862
 Modelo salvo em densenet121_finetuned.pth
 ```
+
+Treinamento VisualTransformer pré-treinada
+
+```
+Epoch 1/10 | Train Loss: 0.2210 Acc: 0.9038 | Val Loss: 0.0879 Acc: 0.9684
+Epoch 2/10 | Train Loss: 0.1024 Acc: 0.9605 | Val Loss: 0.0721 Acc: 0.9724
+Epoch 3/10 | Train Loss: 0.0455 Acc: 0.9798 | Val Loss: 0.1234 Acc: 0.9625
+Epoch 4/10 | Train Loss: 0.0413 Acc: 0.9872 | Val Loss: 0.0596 Acc: 0.9704
+Epoch 5/10 | Train Loss: 0.0449 Acc: 0.9812 | Val Loss: 0.0595 Acc: 0.9763
+Epoch 6/10 | Train Loss: 0.0181 Acc: 0.9931 | Val Loss: 0.0429 Acc: 0.9803
+Epoch 7/10 | Train Loss: 0.0498 Acc: 0.9803 | Val Loss: 0.0667 Acc: 0.9684
+Epoch 8/10 | Train Loss: 0.0403 Acc: 0.9837 | Val Loss: 0.0716 Acc: 0.9724
+Epoch 9/10 | Train Loss: 0.0276 Acc: 0.9891 | Val Loss: 0.0922 Acc: 0.9744
+Epoch 10/10 | Train Loss: 0.0392 Acc: 0.9877 | Val Loss: 0.0749 Acc: 0.9704
+Modelo salvo em VisualTransformer_finetuned.pth
+```
