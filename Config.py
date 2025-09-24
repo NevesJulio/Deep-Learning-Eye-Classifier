@@ -1,23 +1,18 @@
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torchvision import datasets, transforms, models
-from torch.utils.data import DataLoader
-from torch.utils.data import Dataset
 from pathlib import Path
 from PIL import Image
-from torchvision import transforms
 import torch
-import torch.optim as optim
 import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, Dataset
+from torchvision import datasets, transforms, models
 from tqdm import tqdm
-import torch
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 
-
-#Definindo a classe do dataset
+# =======================
+# Classe do Dataset
+# =======================
 class ImageDataset(Dataset):
-    
-    def __init__(self, root_dir, transform = None):
+    def __init__(self, root_dir, transform=None):
         self.root_dir = Path(root_dir)
         self.transform = transform  # se não passar transform, usa padrão
         self.samples = []  # [(img_path, label_idx), ...]
@@ -35,7 +30,6 @@ class ImageDataset(Dataset):
     def __str__(self):
         return f"ImageDataset with {len(self)} samples from {len(self.class_to_idx)} classes."
 
-
     def __getitem__(self, idx):
         img_path, label = self.samples[idx]
 
@@ -44,23 +38,27 @@ class ImageDataset(Dataset):
             img = Image.open(f).convert('RGB')  # garante 3 canais
 
         # Aplica transformações (pré-processamento/resnet normalization)
-        img = self.transform(img)
+        if self.transform:
+            img = self.transform(img)
 
         return img, torch.tensor(label, dtype=torch.long)
-    
 
 
-#Função de treino e validação + tqdm
 
-def train_and_validate(model, train_loader, val_loader, criterion, optimizer, device, epochs, save_path):
+def train_and_validate(model, train_loader, val_loader, criterion, optimizer, device, epochs, save_path, num_classes=2):
+    history = {
+        "train_loss": [], "train_acc": [],
+        "val_loss": [], "val_acc": [],
+        "precision": [], "recall": [], "f1": [],
+        "roc_auc": [], "roc_curves": []  # <-- adicionada a chave
+    }
+
     for epoch in range(1, epochs + 1):
-
         # ---- Treino ----
         model.train()
         train_loss = 0
         correct = 0
         total = 0
-
         loop = tqdm(train_loader, desc=f"Epoch {epoch}/{epochs} [Train]", leave=False, colour="green")
         for images, labels in loop:
             images = images.to(device, non_blocking=True)
@@ -76,7 +74,6 @@ def train_and_validate(model, train_loader, val_loader, criterion, optimizer, de
             _, preds = torch.max(outputs, 1)
             correct += (preds == labels).sum().item()
             total += labels.size(0)
-
             loop.set_postfix(loss=loss.item(), acc=f"{correct/total:.4f}")
 
         train_loss /= total
@@ -87,13 +84,15 @@ def train_and_validate(model, train_loader, val_loader, criterion, optimizer, de
         val_loss = 0
         correct = 0
         total = 0
+        all_preds = []
+        all_labels = []
+        all_probs = []
 
         loop = tqdm(val_loader, desc=f"Epoch {epoch}/{epochs} [Val]  ", leave=False, colour="blue")
         with torch.no_grad():
             for images, labels in loop:
                 images = images.to(device, non_blocking=True)
                 labels = labels.to(device, non_blocking=True)
-
                 outputs = model(images)
                 loss = criterion(outputs, labels)
 
@@ -102,15 +101,48 @@ def train_and_validate(model, train_loader, val_loader, criterion, optimizer, de
                 correct += (preds == labels).sum().item()
                 total += labels.size(0)
 
+                all_preds.extend(preds.cpu().numpy())
+                all_labels.extend(labels.cpu().numpy())
+                if num_classes == 2:
+                    all_probs.extend(torch.softmax(outputs, dim=1)[:,1].cpu().numpy())  # probs da classe positiva
+
                 loop.set_postfix(loss=loss.item(), acc=f"{correct/total:.4f}")
 
         val_loss /= total
         val_acc = correct / total
 
+        # ---- Métricas sklearn ----
+        precision = precision_score(all_labels, all_preds, average="binary" if num_classes==2 else "macro")
+        recall = recall_score(all_labels, all_preds, average="binary" if num_classes==2 else "macro")
+        f1 = f1_score(all_labels, all_preds, average="binary" if num_classes==2 else "macro")
+
+        roc_auc = None
+        roc_points = None
+        if num_classes == 2:
+            roc_auc = roc_auc_score(all_labels, all_probs)
+            fpr, tpr, _ = roc_curve(all_labels, all_probs)
+            roc_points = (fpr.tolist(), tpr.tolist())  # <-- salva FPR/TPR como lista
+            history["roc_curves"].append(roc_points)   # <-- adiciona ao histórico
+        else:
+            history["roc_curves"].append(None)  # para compatibilidade
+
         print(f"Epoch {epoch}/{epochs} | "
               f"Train Loss: {train_loss:.4f} Acc: {train_acc:.4f} | "
-              f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f}")
+              f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f} | "
+              f"Prec: {precision:.4f} Rec: {recall:.4f} F1: {f1:.4f} ROC_AUC: {roc_auc:.4f}")
+
+        # ---- Salvar histórico ----
+        history["train_loss"].append(train_loss)
+        history["train_acc"].append(train_acc)
+        history["val_loss"].append(val_loss)
+        history["val_acc"].append(val_acc)
+        history["precision"].append(precision)
+        history["recall"].append(recall)
+        history["f1"].append(f1)
+        history["roc_auc"].append(roc_auc)
 
     # ---- Salvar modelo ----
     torch.save(model.state_dict(), save_path)
     print(f"Modelo salvo em {save_path}")
+
+    return history
