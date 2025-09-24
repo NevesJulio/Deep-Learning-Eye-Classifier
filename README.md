@@ -64,9 +64,7 @@ Epoch 7/10 | Train Loss: 0.0023 Acc: 0.9990 | Val Loss: 0.0481 Acc: 0.9822 | Pre
 Epoch 8/10 | Train Loss: 0.0019 Acc: 0.9995 | Val Loss: 0.0444 Acc: 0.9862 | Prec: 0.9773 Rec: 0.9908 F1: 0.9840 ROC_AUC: 0.9994
 Epoch 9/10 | Train Loss: 0.0180 Acc: 0.9946 | Val Loss: 0.0322 Acc: 0.9862 | Prec: 0.9688 Rec: 1.0000 F1: 0.9841 ROC_AUC: 0.9996
 Epoch 10/10 | Train Loss: 0.0106 Acc: 0.9980 | Val Loss: 0.0506 Acc: 0.9803 | Prec: 0.9641 Rec: 0.9908 F1: 0.9773 ROC_AUC: 0.9990
-Modelo salvo em resnet50_run0.pth
-Histórico salvo em CSV em resnet50_run0_history.csv
-Todos os gráficos salvos na pasta: /home/gabriel.vasiljevic/Júlio/DeepLearning/plots
+
 
 ===== Run 2/5 =====
 Epoch 1/10 | Train Loss: 0.1269 Acc: 0.9487 | Val Loss: 0.0398 Acc: 0.9822 | Prec: 0.9906 Rec: 0.9677 F1: 0.9790 ROC_AUC: 0.9994
@@ -79,9 +77,7 @@ Epoch 7/10 | Train Loss: 0.0058 Acc: 0.9985 | Val Loss: 0.0468 Acc: 0.9822 | Pre
 Epoch 8/10 | Train Loss: 0.0025 Acc: 0.9995 | Val Loss: 0.0319 Acc: 0.9901 | Prec: 0.9818 Rec: 0.9954 F1: 0.9886 ROC_AUC: 0.9994
 Epoch 9/10 | Train Loss: 0.0008 Acc: 1.0000 | Val Loss: 0.0408 Acc: 0.9862 | Prec: 0.9730 Rec: 0.9954 F1: 0.9841 ROC_AUC: 0.9995
 Epoch 10/10 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0318 Acc: 0.9901 | Prec: 0.9818 Rec: 0.9954 F1: 0.9886 ROC_AUC: 0.9995
-Modelo salvo em resnet50_run1.pth
-Histórico salvo em CSV em resnet50_run1_history.csv
-Todos os gráficos salvos na pasta: /home/gabriel.vasiljevic/Júlio/DeepLearning/plots
+
 
 ===== Run 3/5 =====
 Epoch 1/10 | Train Loss: 0.1408 Acc: 0.9388 | Val Loss: 0.2725 Acc: 0.9448 | Prec: 1.0000 Rec: 0.8710 F1: 0.9310 ROC_AUC: 0.9816
@@ -94,9 +90,7 @@ Epoch 7/10 | Train Loss: 0.0004 Acc: 1.0000 | Val Loss: 0.0339 Acc: 0.9901 | Pre
 Epoch 8/10 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0370 Acc: 0.9901 | Prec: 0.9907 Rec: 0.9862 F1: 0.9885 ROC_AUC: 0.9987
 Epoch 9/10 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0363 Acc: 0.9901 | Prec: 0.9907 Rec: 0.9862 F1: 0.9885 ROC_AUC: 0.9990
 Epoch 10/10 | Train Loss: 0.0002 Acc: 1.0000 | Val Loss: 0.0375 Acc: 0.9901 | Prec: 0.9907 Rec: 0.9862 F1: 0.9885 ROC_AUC: 0.9991
-Modelo salvo em resnet50_run2.pth
-Histórico salvo em CSV em resnet50_run2_history.csv
-Todos os gráficos salvos na pasta: /home/gabriel.vasiljevic/Júlio/DeepLearning/plots
+
 
 ===== Run 4/5 =====
 Epoch 1/10 | Train Loss: 0.1576 Acc: 0.9319 | Val Loss: 0.0568 Acc: 0.9763 | Prec: 0.9767 Rec: 0.9677 F1: 0.9722 ROC_AUC: 0.9982
@@ -109,9 +103,7 @@ Epoch 7/10 | Train Loss: 0.0023 Acc: 0.9990 | Val Loss: 0.0276 Acc: 0.9941 | Pre
 Epoch 8/10 | Train Loss: 0.0045 Acc: 0.9990 | Val Loss: 0.0529 Acc: 0.9862 | Prec: 0.9773 Rec: 0.9908 F1: 0.9840 ROC_AUC: 0.9982
 Epoch 9/10 | Train Loss: 0.0163 Acc: 0.9970 | Val Loss: 0.1934 Acc: 0.9744 | Prec: 1.0000 Rec: 0.9401 F1: 0.9691 ROC_AUC: 0.9962
 Epoch 10/10 | Train Loss: 0.0138 Acc: 0.9956 | Val Loss: 0.0289 Acc: 0.9921 | Prec: 0.9908 Rec: 0.9908 F1: 0.9908 ROC_AUC: 0.9995
-Modelo salvo em resnet50_run3.pth
-Histórico salvo em CSV em resnet50_run3_history.csv
-Todos os gráficos salvos na pasta: /home/gabriel.vasiljevic/Júlio/DeepLearning/plots
+
 
 ===== Run 5/5 =====
 Epoch 1/10 | Train Loss: 0.1508 Acc: 0.9383 | Val Loss: 0.0468 Acc: 0.9842 | Prec: 0.9953 Rec: 0.9677 F1: 0.9813 ROC_AUC: 0.9993
