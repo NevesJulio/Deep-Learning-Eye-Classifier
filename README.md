@@ -145,29 +145,29 @@ Histórico salvo em CSV em resnet50_run4_history.csv
      └───────┬────────┘ └───────┬────────┘ └───────┬────────┘
              │                  │                  │
              ▼                  ▼                  ▼
-  ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
-  │ Interm. Layer  │ │ Interm. Layer  │ │ Interm. Layer  │
-  │ 512 → 128      │ │ 1024 → 256     │ │ 256 → 64       │
-  │ BN + Dropout   │ │ BN + Dropout   │ │ BN + Dropout   │
-  │ ReLU           │ │ ReLU           │ │ ReLU           │
-  └───────┬────────┘ └───────┬────────┘ └───────┬────────┘
-          │                  │                  │
-          └──────────────────┬──────────────────┘
-                             ▼
-                     ┌───────────────┐
-                     │ Feature Fusion │
-                     │ Concatenate    │
-                     │  ResNet + VGG +│
-                     │  MobileNet +   │
-                     │  Manual PDI    │
-                     │  Features      │
-                     └───────┬───────┘
-                             ▼
-                     ┌───────────────┐
-                     │ Classifier    │
-                     │ AdaBoost      │
-                     │  Output: 2    │
-                     │  classes      │
-                     └───────────────┘
+      ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+      │ Interm. Layer  │ │ Interm. Layer  │ │ Interm. Layer  │
+      │ 512 → 128      │ │ 1024 → 256     │ │ 256 → 64       │
+      │ BN + Dropout   │ │ BN + Dropout   │ │ BN + Dropout   │
+      │ ReLU           │ │ ReLU           │ │ ReLU           │
+      └───────┬────────┘ └───────┬────────┘ └───────┬────────┘
+              │                  │                  │
+              └──────────────────┬──────────────────┘
+                                 ▼
+                         ┌───────────────┐
+                         │ Feature Fusion │
+                         │ Concatenate    │
+                         │  ResNet + VGG +│
+                         │  MobileNet +   │
+                         │  Manual PDI    │
+                         │  Features      │
+                         └───────┬───────┘
+                                 ▼
+                         ┌───────────────┐
+                         │ Classifier    │
+                         │ AdaBoost      │
+                         │  Output: 2    │
+                         │  classes      │
+                         └───────────────┘
 
 
