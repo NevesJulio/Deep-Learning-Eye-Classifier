@@ -120,3 +120,54 @@ Modelo salvo em resnet50_run4.pth
 Histórico salvo em CSV em resnet50_run4_history.csv
 ```
 
+# Possível abordagem
+
+
+                       ┌───────────────┐
+                       │  Input Image  │
+                       └───────┬───────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+      ┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+      │  Backbone     │  │  Backbone     │  │  Backbone     │
+      │  ResNet50     │  │  VGG16        │  │  MobileNet    │
+      │  ~25M params  │  │  ~138M params │  │  ~4M params   │
+      │  conv + blocks│  │  conv + blocks│  │  conv + blocks│
+      └───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+              │                  │                  │
+              ▼                  ▼                  ▼
+     ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+     │ AvgPool +      │ │ AvgPool +      │ │ AvgPool +      │
+     │ Flatten        │ │ Flatten        │ │ Flatten        │
+     │ 2048-dim       │ │ 4096-dim       │ │ 1024-dim       │
+     └───────┬────────┘ └───────┬────────┘ └───────┬────────┘
+             │                  │                  │
+             ▼                  ▼                  ▼
+  ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+  │ Interm. Layer  │ │ Interm. Layer  │ │ Interm. Layer  │
+  │ 512 → 128      │ │ 1024 → 256     │ │ 256 → 64       │
+  │ BN + Dropout   │ │ BN + Dropout   │ │ BN + Dropout   │
+  │ ReLU           │ │ ReLU           │ │ ReLU           │
+  └───────┬────────┘ └───────┬────────┘ └───────┬────────┘
+          │                  │                  │
+          └──────────────────┬──────────────────┘
+                             ▼
+                     ┌───────────────┐
+                     │ Feature Fusion │
+                     │ Concatenate    │
+                     │  ResNet + VGG +│
+                     │  MobileNet +   │
+                     │  Manual PDI    │
+                     │  Features      │
+                     └───────┬───────┘
+                             ▼
+                     ┌───────────────┐
+                     │ Classifier    │
+                     │ AdaBoost      │
+                     │  Output: 2    │
+                     │  classes      │
+                     └───────────────┘
+
+
