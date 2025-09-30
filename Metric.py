@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
 
 def plot_history(history, model_name="modelo", save_dir="plots"):
     """
@@ -56,7 +59,17 @@ def plot_history(history, model_name="modelo", save_dir="plots"):
         plt.title(f"Curva ROC final - {model_name}")
         plt.legend()
         plt.savefig(save_path / f"{model_name}_roc_curve.png")
-        plt.show()
+        plt.show()                                                                                  
 
+    # --- Matriz de confusão ---
+    if "val_labels" in history and "val_preds" in history:
+        cm = confusion_matrix(history["val_labels"], history["val_preds"])
+        plt.figure(figsize=(6,5))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        plt.title(f"Matriz de Confusão - {model_name}")
+        plt.savefig(save_path / f"{model_name}_confusion_matrix.png")
+        plt.show()
 
     print(f"Todos os gráficos salvos na pasta: {save_path.resolve()}")

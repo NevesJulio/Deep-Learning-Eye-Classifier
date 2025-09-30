@@ -16,7 +16,7 @@ BATCH_SIZE = 64
 EPOCHS = 10
 LR = 1e-4
 DEVICE = "cuda:1"
-MODEL_NAME = "resnet50"
+MODEL_NAME = "vgg19"
 n_runs = 1
 histories = {}
 num_classes = 2
@@ -39,27 +39,45 @@ train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=1, pin_memory=True)
 val_loader   = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=1, pin_memory=True)
 
-
-
+'''
+class CustomHead(nn.Module):
+    def __init__(self, in_features, num_classes, dropout_p=0.4):
+        super().__init__()
+        self.classifier = nn.Sequential(
+            
+            nn.Dropout(dropout_p),
+            nn.Linear(in_features, 64),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.Linear(64, num_classes)
+        )
+'''
+        
 for i in range(n_runs):
     print(f"\n===== Run {i+1}/{n_runs} =====")
     
-    model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+    # Carrega o modelo VGG19 com pesos pré-treinados
+    model = models.vgg19(weights=models.VGG19_Weights.IMAGENET1K_V1)
 
-    #Congela todas as camadas exceto as últimas duas do BackBone
+    # Congela tudo por padrão
+    for param in model.features.parameters():
+        param.requires_grad = False
 
-    for name, param in model.named_parameters():
-        if "layer3" not in name and "layer4" not in name:
-            param.requires_grad = False
+    # Libera só o último bloco convolucional (features[28:] da VGG19)
+    for param in model.features[28:].parameters():
+        param.requires_grad = True
 
-    model.fc = CustomHead(model.fc.in_features, num_classes, DROPOUT_RATE)
+    # Substitui o classifier por um head customizado
+    in_features = model.classifier[0].in_features
+    model.classifier = CustomHead(in_features, num_classes, DROPOUT_RATE)
+
     model = model.to(DEVICE)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(
-    filter(lambda p: p.requires_grad, model.parameters()), 
-    lr=1e-4, 
-    weight_decay=0.02  # L2 regularization
+        filter(lambda p: p.requires_grad, model.parameters()), 
+        lr=1e-4, 
+        weight_decay=0.02
     )
     scheduler = OneCycleLR(optimizer, max_lr=LR, steps_per_epoch=len(train_loader), epochs=EPOCHS)
 
@@ -73,20 +91,21 @@ for i in range(n_runs):
         scheduler=scheduler,
         device=DEVICE,
         epochs=EPOCHS,
-        save_path=f"{MODEL_NAME}_run{i}.pth",
+        save_path=f"vgg19_run{i}.pth",
         num_classes=num_classes
     )
 
     histories[f"run_{i}"] = history
 
     # Salva histórico em .pt
-    torch.save(history, f"history_{MODEL_NAME}_run{i}.pt")
+    torch.save(history, f"history_vgg19_run{i}.pt")
 
     # Salva histórico em CSV
     df = pd.DataFrame(history)
-    csv_path = f"{MODEL_NAME}_run{i}_history.csv"
+    csv_path = f"vgg19_run{i}_history.csv"
     df.to_csv(csv_path, index=False)
     print(f"Histórico salvo em CSV em {csv_path}")
 
     # Plota e salva gráficos
-    plot_history(history, model_name=f"{MODEL_NAME}_run{i}")
+    plot_history(history, model_name=f"vgg19_run{i}")
+

@@ -8,17 +8,15 @@ from torchvision import datasets, transforms, models
 from tqdm import tqdm
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 
-# =======================
+
 # Classe do Dataset
-# =======================
 class ImageDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = Path(root_dir)
-        self.transform = transform  # se não passar transform, usa padrão
-        self.samples = []  # [(img_path, label_idx), ...]
-        self.class_to_idx = {}  # {"classe": idx}
+        self.transform = transform 
+        self.samples = []  
+        self.class_to_idx = {} 
 
-        # Cria lista de imagens + label
         for i, class_dir in enumerate(sorted(p for p in self.root_dir.iterdir() if p.is_dir())):
             self.class_to_idx[class_dir.name] = i
             for img_path in class_dir.glob('*'):
@@ -44,17 +42,45 @@ class ImageDataset(Dataset):
         return img, torch.tensor(label, dtype=torch.long)
 
 
+class CustomHead(nn.Module):
+    def __init__(self, in_features, num_classes, dropout_p=0.5):
+        super().__init__()
+        self.classifier = nn.Sequential(
+            nn.BatchNorm1d(in_features),
+            nn.Dropout(dropout_p),
+            nn.Linear(in_features, 512),
+            nn.ReLU(),
 
-def train_and_validate(model, train_loader, val_loader, criterion, optimizer, device, epochs, save_path, num_classes=2):
+            nn.BatchNorm1d(512),
+            nn.Dropout(dropout_p),
+            nn.Linear(512, 128),
+            nn.ReLU(),
+
+            nn.BatchNorm1d(128),
+            nn.Dropout(dropout_p),
+            nn.Linear(128, 32),
+            nn.ReLU(),
+
+            nn.Linear(32, num_classes)
+        )
+        
+    def forward(self, x):
+        return self.classifier(x)
+
+
+def train_and_validate(model, train_loader, val_loader, criterion, optimizer, scheduler, device, epochs, save_path, num_classes=2):
     history = {
         "train_loss": [], "train_acc": [],
         "val_loss": [], "val_acc": [],
         "precision": [], "recall": [], "f1": [],
-        "roc_auc": [], "roc_curves": []  # <-- adicionada a chave
+        "roc_auc": [], "roc_curves": [],
+        "val_labels": [], "val_preds": []
     }
 
+
     for epoch in range(1, epochs + 1):
-        # ---- Treino ----
+
+#Treino
         model.train()
         train_loss = 0
         correct = 0
@@ -69,6 +95,7 @@ def train_and_validate(model, train_loader, val_loader, criterion, optimizer, de
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
+            scheduler.step()
 
             train_loss += loss.item() * images.size(0)
             _, preds = torch.max(outputs, 1)
@@ -79,7 +106,7 @@ def train_and_validate(model, train_loader, val_loader, criterion, optimizer, de
         train_loss /= total
         train_acc = correct / total
 
-        # ---- Validação ----
+#validação
         model.eval()
         val_loss = 0
         correct = 0
@@ -107,6 +134,10 @@ def train_and_validate(model, train_loader, val_loader, criterion, optimizer, de
                     all_probs.extend(torch.softmax(outputs, dim=1)[:,1].cpu().numpy())  # probs da classe positiva
 
                 loop.set_postfix(loss=loss.item(), acc=f"{correct/total:.4f}")
+        # adiciona dentro do dicionário history
+
+        history["val_labels"] = all_labels
+        history["val_preds"] = all_preds
 
         val_loss /= total
         val_acc = correct / total
