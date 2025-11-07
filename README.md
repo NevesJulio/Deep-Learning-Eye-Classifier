@@ -30,7 +30,17 @@ Resultado de uma run com a VGG19 pré-treinada
 ![Texto alternativo](vgg19_accuracy.png)
 
 ```
-
+===== Run 10/10 =====
+Epoch 1/10 | Train Loss: 0.7198 Acc: 0.4635 | Val Loss: 0.6863 Acc: 0.5424 | Prec: 0.4651 Rec: 0.8780 F1: 0.6081 ROC_AUC: 0.6851
+Epoch 2/10 | Train Loss: 0.6557 Acc: 0.6056 | Val Loss: 0.6290 Acc: 0.6864 | Prec: 0.5657 Rec: 0.9659 F1: 0.7135 ROC_AUC: 0.9273
+Epoch 3/10 | Train Loss: 0.5332 Acc: 0.8070 | Val Loss: 0.5043 Acc: 0.8442 | Prec: 0.7299 Rec: 0.9756 F1: 0.8351 ROC_AUC: 0.9734
+Epoch 4/10 | Train Loss: 0.4220 Acc: 0.8736 | Val Loss: 0.3899 Acc: 0.8935 | Prec: 0.8057 Rec: 0.9707 F1: 0.8805 ROC_AUC: 0.9832
+Epoch 5/10 | Train Loss: 0.3533 Acc: 0.8865 | Val Loss: 0.3106 Acc: 0.9093 | Prec: 0.8354 Rec: 0.9659 F1: 0.8959 ROC_AUC: 0.9871
+Epoch 6/10 | Train Loss: 0.3095 Acc: 0.9116 | Val Loss: 0.2584 Acc: 0.9211 | Prec: 0.8634 Rec: 0.9561 F1: 0.9074 ROC_AUC: 0.9884
+Epoch 7/10 | Train Loss: 0.2889 Acc: 0.9028 | Val Loss: 0.2299 Acc: 0.9250 | Prec: 0.8778 Rec: 0.9463 F1: 0.9108 ROC_AUC: 0.9889
+Epoch 8/10 | Train Loss: 0.2822 Acc: 0.8998 | Val Loss: 0.2178 Acc: 0.9349 | Prec: 0.8945 Rec: 0.9512 F1: 0.9220 ROC_AUC: 0.9896
+Epoch 9/10 | Train Loss: 0.2623 Acc: 0.9131 | Val Loss: 0.2143 Acc: 0.9310 | Prec: 0.8935 Rec: 0.9415 F1: 0.9169 ROC_AUC: 0.9894
+Epoch 10/10 | Train Loss: 0.2698 Acc: 0.9102 | Val Loss: 0.2074 Acc: 0.9290 | Prec: 0.8930 Rec: 0.9366 F1: 0.9143 ROC_AUC: 0.9894
 ```
 
 ![Texto alternativo](MobileNetV3_accuracy.png)
