@@ -29,6 +29,15 @@ Resultado de uma run com a VGG19 pré-treinada
 
 ![Texto alternativo](vgg19_accuracy.png)
 
+```
+
+```
+
+![Texto alternativo](MobileNetV3_accuracy.png)
+
+
+
+
 # Possível abordagem
 
 
